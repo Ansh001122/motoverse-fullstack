@@ -1,0 +1,3 @@
+package com.ansh.motoverse.controller;
+import com.ansh.motoverse.model.Vehicle; import com.ansh.motoverse.service.VehicleService; import org.springframework.web.bind.annotation.*; import java.util.List;
+@RestController @RequestMapping("/api/vehicles") public class VehicleController { private final VehicleService vehicleService; public VehicleController(VehicleService vehicleService){this.vehicleService=vehicleService;} @GetMapping public List<Vehicle> getAllVehicles(){return vehicleService.getAllVehicles();} @GetMapping("/available") public List<Vehicle> getAvailableVehicles(){return vehicleService.getAvailableVehicles();} @GetMapping("/search") public List<Vehicle> searchVehicles(@RequestParam String keyword){return vehicleService.searchVehicles(keyword);} }
