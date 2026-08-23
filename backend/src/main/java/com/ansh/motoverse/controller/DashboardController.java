@@ -1,0 +1,3 @@
+package com.ansh.motoverse.controller;
+import com.ansh.motoverse.model.DashboardSummary; import com.ansh.motoverse.repository.*; import org.springframework.web.bind.annotation.*;
+@RestController @RequestMapping("/api/dashboard") public class DashboardController { private final VehicleRepository vehicleRepository; private final BookingRepository bookingRepository; public DashboardController(VehicleRepository vehicleRepository,BookingRepository bookingRepository){this.vehicleRepository=vehicleRepository;this.bookingRepository=bookingRepository;} @GetMapping("/summary") public DashboardSummary getSummary(){return new DashboardSummary(vehicleRepository.count(),vehicleRepository.countByAvailableTrue(),bookingRepository.count(),bookingRepository.totalRevenue());} }

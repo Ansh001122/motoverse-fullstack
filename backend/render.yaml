@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: motoverse-backend
+    env: docker
+    plan: free
+    rootDir: backend
+    autoDeploy: true
+    envVars:
+      - key: SPRING_PROFILES_ACTIVE
+        value: prod
