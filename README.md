@@ -220,7 +220,7 @@ app.jwt.secret=9a7c3b2e5f8a1d4c7b0e3a6f9c2d5e8b1a4f7c0d3e6a9b2c5e8f1a4d7b0c3e6f
 app.jwt.expiration-ms=3600000
 
 app.admin.email=anshrajconnect00@gmail.com
-app.admin.password=anshraj1234
+app.admin.password=***********
 Build and launch the Spring Boot service:Bashcd backend
 mvn clean spring-boot:run
 The API will start listening on http://localhost:8080.3. Frontend StartupIn a separate terminal window:Bashcd frontend
