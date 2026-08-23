@@ -24,11 +24,10 @@ The backend uses Spring Data JPA with an H2 database for the current development
 ### Frontend
 - React
 - JavaScript
-- Axios
 - HTML/CSS
 
 ### Backend
-- Java 17
+- Java (7,17)
 - Spring Boot 3.2.5
 - Spring Web
 - Spring Security
@@ -38,6 +37,7 @@ The backend uses Spring Data JPA with an H2 database for the current development
 
 ### Database
 - H2 for the current development configuration
+- MySQL 
 
 ### Tools
 - Maven
