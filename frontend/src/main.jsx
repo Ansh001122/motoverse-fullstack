@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { createRoot } from "react-dom/client";
 import {
   createBooking,
   getBookings,
@@ -139,226 +140,259 @@ function App() {
   );
 
   return (
-    <main>
-      <section className="hero">
+    <main style={{ padding: "2rem", maxWidth: "1200px", margin: "0 auto", fontFamily: "sans-serif" }}>
+      <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem" }}>
         <div>
-          <p className="eyebrow">Vehicle Rental Platform</p>
-          <h1>Motoverse</h1>
-          <p className="hero-text">
-            Book bikes, scooters, cars, and SUVs with a full-stack rental
-            workflow built using React and Spring Boot.
-          </p>
-
-          <form className="search" onSubmit={handleSearch}>
-            <input
-              value={keyword}
-              onChange={(e) => setKeyword(e.target.value)}
-              placeholder="Search by vehicle, category, or city"
-            />
-            <button>Search</button>
-          </form>
+          <h1 style={{ margin: 0, color: "#1e293b" }}>🏍️ MotoVerse</h1>
+          <p style={{ margin: "4px 0 0", color: "#64748b" }}>Vehicle Rental Platform & Dashboard</p>
         </div>
 
-        <div className="hero-card">
-          <span>Authentication</span>
+        <div style={{ padding: "1rem", border: "1px solid #e2e8f0", borderRadius: "8px", background: "#f8fafc" }}>
           {user ? (
-            <>
-              <strong>{user.email}</strong>
-              <p>Role: {user.role}</p>
-              <button onClick={logout}>Logout</button>
-            </>
-          ) : (
-            <p>Log in to create bookings.</p>
-          )}
-        </div>
-      </section>
-
-      {message && <div className="alert">{message}</div>}
-
-      {!user && (
-        <section className="booking-panel">
-          <div>
-            <p className="eyebrow">JWT Authentication</p>
-            <h2>{authMode === "login" ? "Login" : "Create account"}</h2>
-            <p>
-              {authMode === "login"
-                ? "Log in to create and view bookings."
-                : "New accounts are created with the USER role."}
-            </p>
-          </div>
-
-          <form onSubmit={handleAuth}>
-            <input
-              type="email"
-              placeholder="Email"
-              value={authForm.email}
-              onChange={(e) =>
-                setAuthForm({ ...authForm, email: e.target.value })
-              }
-              required
-            />
-            <input
-              type="password"
-              placeholder="Password"
-              minLength="6"
-              value={authForm.password}
-              onChange={(e) =>
-                setAuthForm({ ...authForm, password: e.target.value })
-              }
-              required
-            />
-            <button>{authMode === "login" ? "Login" : "Register"}</button>
-            <button
-              type="button"
-              onClick={() =>
-                setAuthMode(authMode === "login" ? "register" : "login")
-              }
-            >
-              {authMode === "login" ? "Create account" : "Back to login"}
-            </button>
-          </form>
-        </section>
-      )}
-
-      {isAdmin && summary && (
-        <section className="stats">
-          <Stat label="Total Vehicles" value={summary.totalVehicles} />
-          <Stat label="Available" value={summary.availableVehicles} />
-          <Stat label="Bookings" value={summary.totalBookings} />
-          <Stat label="Revenue" value={`₹${summary.totalRevenue}`} />
-        </section>
-      )}
-
-      <section className="section-heading">
-        <div>
-          <p className="eyebrow">Explore Fleet</p>
-          <h2>Available rentals</h2>
-        </div>
-
-        <select value={category} onChange={(e) => setCategory(e.target.value)}>
-          {categories.map((item) => (
-            <option key={item}>{item}</option>
-          ))}
-        </select>
-      </section>
-
-      <section className="grid">
-        {filteredVehicles.map((vehicle) => (
-          <article className="vehicle-card" key={vehicle.id}>
-            <img src={vehicle.imageUrl} alt={vehicle.name} />
-
-            <div className="vehicle-body">
-              <div className="vehicle-title">
-                <h3>{vehicle.name}</h3>
-                <span className={vehicle.available ? "available" : "unavailable"}>
-                  {vehicle.available ? "Available" : "Booked"}
+            <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+              <div>
+                <strong>{user.email}</strong>
+                <span style={{ marginLeft: "8px", fontSize: "0.85rem", background: "#cbd5e1", padding: "2px 6px", borderRadius: "4px" }}>
+                  {user.role}
                 </span>
               </div>
-
-              <p>
-                {vehicle.category} • {vehicle.location}
-              </p>
-
-              <strong>₹{vehicle.pricePerDay}/day</strong>
-
-              <button
-                disabled={!vehicle.available}
-                onClick={() => setSelectedVehicle(vehicle)}
-              >
-                Book Now
-              </button>
+              <button onClick={logout} style={{ padding: "6px 12px", cursor: "pointer" }}>Logout</button>
             </div>
-          </article>
-        ))}
+          ) : (
+            <form onSubmit={handleAuth} style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+              <input
+                type="email"
+                placeholder="Email"
+                value={authForm.email}
+                onChange={(e) => setAuthForm({ ...authForm, email: e.target.value })}
+                required
+                style={{ padding: "6px" }}
+              />
+              <input
+                type="password"
+                placeholder="Password"
+                value={authForm.password}
+                onChange={(e) => setAuthForm({ ...authForm, password: e.target.value })}
+                required
+                style={{ padding: "6px" }}
+              />
+              <button type="submit" style={{ padding: "6px 12px", cursor: "pointer" }}>
+                {authMode === "login" ? "Login" : "Register"}
+              </button>
+              <button
+                type="button"
+                onClick={() => setAuthMode(authMode === "login" ? "register" : "login")}
+                style={{ background: "none", border: "none", color: "#2563eb", cursor: "pointer", textDecoration: "underline" }}
+              >
+                Switch to {authMode === "login" ? "Register" : "Login"}
+              </button>
+            </form>
+          )}
+        </div>
+      </header>
+
+      {message && (
+        <div style={{ padding: "12px", marginBottom: "1.5rem", background: "#e0f2fe", color: "#0369a1", borderRadius: "6px" }}>
+          {message}
+        </div>
+      )}
+
+      {/* Admin Analytics Panel */}
+      {isAdmin && summary && (
+        <section style={{ marginBottom: "2rem", padding: "1.5rem", background: "#f1f5f9", borderRadius: "8px" }}>
+          <h2>Admin Dashboard Overview</h2>
+          <div style={{ display: "flex", gap: "2rem", marginTop: "1rem" }}>
+            <div style={{ background: "white", padding: "1rem", borderRadius: "6px", flex: 1, boxShadow: "0 1px 3px rgba(0,0,0,0.1)" }}>
+              <div style={{ color: "#64748b" }}>Total Vehicles</div>
+              <h3 style={{ margin: "8px 0 0", fontSize: "1.8rem" }}>{summary.totalVehicles || vehicles.length}</h3>
+            </div>
+            <div style={{ background: "white", padding: "1rem", borderRadius: "6px", flex: 1, boxShadow: "0 1px 3px rgba(0,0,0,0.1)" }}>
+              <div style={{ color: "#64748b" }}>Total Bookings</div>
+              <h3 style={{ margin: "8px 0 0", fontSize: "1.8rem" }}>{summary.totalBookings || bookings.length}</h3>
+            </div>
+            <div style={{ background: "white", padding: "1rem", borderRadius: "6px", flex: 1, boxShadow: "0 1px 3px rgba(0,0,0,0.1)" }}>
+              <div style={{ color: "#64748b" }}>Total Revenue</div>
+              <h3 style={{ margin: "8px 0 0", fontSize: "1.8rem", color: "#16a34a" }}>
+                ₹{summary.totalRevenue || 0}
+              </h3>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Search & Category Filter */}
+      <section style={{ display: "flex", gap: "1rem", marginBottom: "2rem", alignItems: "center" }}>
+        <form onSubmit={handleSearch} style={{ display: "flex", gap: "8px", flex: 1 }}>
+          <input
+            type="text"
+            value={keyword}
+            onChange={(e) => setKeyword(e.target.value)}
+            placeholder="Search by vehicle name, city, or type..."
+            style={{ flex: 1, padding: "8px 12px", borderRadius: "6px", border: "1px solid #cbd5e1" }}
+          />
+          <button type="submit" style={{ padding: "8px 16px", cursor: "pointer" }}>Search</button>
+        </form>
+
+        <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+          <span>Category:</span>
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+            style={{ padding: "8px", borderRadius: "6px", border: "1px solid #cbd5e1" }}
+          >
+            {categories.map((c) => (
+              <option key={c} value={c}>{c}</option>
+            ))}
+          </select>
+        </div>
       </section>
 
-      {isAuthenticated && (
-        <>
-          <section className="booking-panel">
-            <div>
-              <p className="eyebrow">Booking</p>
-              <h2>
-                {selectedVehicle
-                  ? selectedVehicle.name
-                  : "Select a vehicle to book"}
-              </h2>
-
-              {selectedVehicle && (
-                <p>
-                  Total estimate: ₹
-                  {Number(selectedVehicle.pricePerDay) *
-                    Number(form.rentalDays || 1)}
-                </p>
-              )}
-            </div>
-
-            <form onSubmit={handleBooking}>
-              <input
-                placeholder="Customer name"
-                value={form.customerName}
-                onChange={(e) =>
-                  setForm({ ...form, customerName: e.target.value })
-                }
-                required
+      {/* Vehicle Grid */}
+      <section>
+        <h2>Available Fleet ({filteredVehicles.length})</h2>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(260px, 1fr))", gap: "1.5rem", marginTop: "1rem" }}>
+          {filteredVehicles.map((v) => (
+            <div
+              key={v.id}
+              style={{
+                border: selectedVehicle?.id === v.id ? "2px solid #2563eb" : "1px solid #e2e8f0",
+                borderRadius: "8px",
+                overflow: "hidden",
+                background: "#ffffff",
+                boxShadow: "0 1px 3px rgba(0,0,0,0.08)",
+                display: "flex",
+                flexDirection: "column",
+              }}
+            >
+              <img
+                src={v.imageUrl || "https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=600&auto=format&fit=crop&q=80"}
+                alt={v.name}
+                style={{ width: "100%", height: "160px", objectFit: "cover" }}
               />
+              <div style={{ padding: "1rem", flex: 1, display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+                <div>
+                  <h3 style={{ margin: "0 0 4px" }}>{v.name}</h3>
+                  <div style={{ color: "#64748b", fontSize: "0.9rem" }}>{v.category} • {v.location}</div>
+                  <div style={{ margin: "8px 0", fontWeight: "bold", color: "#0f172a" }}>₹{v.pricePerDay} / day</div>
+                </div>
+                <button
+                  onClick={() => {
+                    setSelectedVehicle(v);
+                    setForm((prev) => ({
+                      ...prev,
+                      customerEmail: user?.email || prev.customerEmail,
+                    }));
+                  }}
+                  style={{
+                    width: "100%",
+                    padding: "8px",
+                    cursor: "pointer",
+                    background: selectedVehicle?.id === v.id ? "#16a34a" : "#2563eb",
+                    color: "#fff",
+                    border: "none",
+                    borderRadius: "4px",
+                  }}
+                >
+                  {selectedVehicle?.id === v.id ? "Selected" : "Book Now"}
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
 
+      {/* Booking Form Modal / Section */}
+      {selectedVehicle && (
+        <section style={{ marginTop: "3rem", padding: "1.5rem", border: "2px solid #2563eb", borderRadius: "8px", background: "#f8fafc" }}>
+          <h2>Confirm Booking for {selectedVehicle.name}</h2>
+          <form onSubmit={handleBooking} style={{ display: "flex", flexDirection: "column", gap: "1rem", maxWidth: "400px", marginTop: "1rem" }}>
+            <div>
+              <label style={{ display: "block", marginBottom: "4px" }}>Full Name</label>
               <input
-                placeholder="Customer email"
+                type="text"
+                value={form.customerName}
+                onChange={(e) => setForm({ ...form, customerName: e.target.value })}
+                required
+                style={{ width: "100%", padding: "8px", borderRadius: "4px", border: "1px solid #cbd5e1" }}
+              />
+            </div>
+            <div>
+              <label style={{ display: "block", marginBottom: "4px" }}>Email Address</label>
+              <input
                 type="email"
                 value={form.customerEmail}
-                onChange={(e) =>
-                  setForm({ ...form, customerEmail: e.target.value })
-                }
+                onChange={(e) => setForm({ ...form, customerEmail: e.target.value })}
                 required
+                style={{ width: "100%", padding: "8px", borderRadius: "4px", border: "1px solid #cbd5e1" }}
               />
-
+            </div>
+            <div>
+              <label style={{ display: "block", marginBottom: "4px" }}>Rental Duration (Days)</label>
               <input
-                placeholder="Rental days"
                 type="number"
                 min="1"
                 value={form.rentalDays}
-                onChange={(e) =>
-                  setForm({ ...form, rentalDays: e.target.value })
-                }
+                onChange={(e) => setForm({ ...form, rentalDays: e.target.value })}
                 required
+                style={{ width: "100%", padding: "8px", borderRadius: "4px", border: "1px solid #cbd5e1" }}
               />
+            </div>
+            <div style={{ fontWeight: "bold", fontSize: "1.1rem" }}>
+              Estimated Total: ₹{(selectedVehicle.pricePerDay * (Number(form.rentalDays) || 1)).toFixed(2)}
+            </div>
+            <div style={{ display: "flex", gap: "8px" }}>
+              <button type="submit" style={{ padding: "8px 16px", background: "#16a34a", color: "white", border: "none", borderRadius: "4px", cursor: "pointer" }}>
+                Confirm & Pay
+              </button>
+              <button type="button" onClick={() => setSelectedVehicle(null)} style={{ padding: "8px 16px", cursor: "pointer" }}>
+                Cancel
+              </button>
+            </div>
+          </form>
+        </section>
+      )}
 
-              <button disabled={!selectedVehicle}>Confirm Booking</button>
-            </form>
-          </section>
-
-          <section className="bookings">
-            <p className="eyebrow">Recent Bookings</p>
-            <h2>Booking history</h2>
-
-            {bookings.length === 0 ? (
-              <p>No bookings yet.</p>
-            ) : (
-              <div className="booking-list">
-                {bookings.map((booking) => (
-                  <div key={booking.id} className="booking-item">
-                    <strong>{booking.vehicle.name}</strong>
-                    <span>{booking.customerName}</span>
-                    <span>{booking.rentalDays} day(s)</span>
-                    <span>₹{booking.totalAmount}</span>
-                  </div>
+      {/* Bookings List */}
+      {isAuthenticated && bookings.length > 0 && (
+        <section style={{ marginTop: "3rem" }}>
+          <h2>My Bookings ({bookings.length})</h2>
+          <div style={{ marginTop: "1rem", overflowX: "auto" }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left" }}>
+              <thead>
+                <tr style={{ borderBottom: "2px solid #cbd5e1" }}>
+                  <th style={{ padding: "8px" }}>Booking ID</th>
+                  <th style={{ padding: "8px" }}>Vehicle ID</th>
+                  <th style={{ padding: "8px" }}>Days</th>
+                  <th style={{ padding: "8px" }}>Total Amount</th>
+                  <th style={{ padding: "8px" }}>Status</th>
+                </tr>
+              </thead>
+              <tbody>
+                {bookings.map((b) => (
+                  <tr key={b.id} style={{ borderBottom: "1px solid #e2e8f0" }}>
+                    <td style={{ padding: "8px" }}>#{b.id}</td>
+                    <td style={{ padding: "8px" }}>{b.vehicleId}</td>
+                    <td style={{ padding: "8px" }}>{b.rentalDays}</td>
+                    <td style={{ padding: "8px" }}>₹{b.totalAmount}</td>
+                    <td style={{ padding: "8px" }}>
+                      <span style={{ padding: "2px 6px", borderRadius: "4px", background: "#dcfce7", color: "#15803d" }}>
+                        {b.status}
+                      </span>
+                    </td>
+                  </tr>
                 ))}
-              </div>
-            )}
-          </section>
-        </>
+              </tbody>
+            </table>
+          </div>
+        </section>
       )}
     </main>
   );
 }
 
-function Stat({ label, value }) {
-  return (
-    <div className="stat-card">
-      <span>{label}</span>
-      <strong>{value}</strong>
-    </div>
-  );
-}
-
-createRoot(document.getElementById("root")).render(<App />);
+const root = createRoot(document.getElementById("root"));
+root.render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>
+);
